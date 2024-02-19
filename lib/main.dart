@@ -1,69 +1,71 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: SizedBox(
-          height: 1500,
-          width: 1500,
-            child: ListView(
-          children: [
-            Container(
-                height: 200,
-                color: Color.fromARGB(255, 196, 147, 33),
-                child: Center(child: Counter())),
-            Container(
-                height: 200,
-                color: Color.fromARGB(255, 141, 18, 57),
-                child: Center(child: Counter())),
-            Container(
-                height: 200,
-                color: Color.fromARGB(255, 23, 127, 26),
-                child: Center(child: Counter())),
-            Container(
-                height: 200,
-                color: Color.fromARGB(255, 119, 44, 148),
-                child: Center(child: Counter())),
-          ],
-        )
-        ),
+        appBar: AppBar(title: const Text("Achla exrsice for StatefullWidget")),
+        body: DynamicColorChanger(),
       ),
     );
   }
 }
 
-class Counter extends StatefulWidget {
+class DynamicColorChanger extends StatefulWidget {
   @override
-  State<Counter> createState() => _CounterState();
+  State<DynamicColorChanger> createState() => _DynamicColorChanger();
 }
 
-class _CounterState extends State<Counter> {
-  int counter = 0;
-  void updateCounterPlus() {
+class _DynamicColorChanger extends State<DynamicColorChanger> {
+  Color _selectedColor = Colors.indigo;
+  final List<Color> _colors = [
+    Colors.indigo,
+    Color.fromARGB(255, 135, 116, 80),
+    Color.fromARGB(255, 173, 75, 111),
+    Color.fromARGB(255, 55, 143, 68),
+  ];
+  void _changeColor(Color color) {
     setState(() {
-      counter++;
-    });
-  }
-
-  void updateCounterMinus() {
-    setState(() {
-      counter--;
+      _selectedColor = color;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        ElevatedButton(onPressed: updateCounterPlus, child: Text("+")),
-        ElevatedButton(onPressed: updateCounterMinus, child: Text("-")),
-        Text("$counter")
+    return Column(
+      children: <Widget>[
+        DropdownButton<Color>(
+            value: _selectedColor,
+            items: _colors.map<DropdownMenuItem<Color>>((Color color) {
+              return DropdownMenuItem<Color>(
+                  value: color,
+                  child: Container(
+                    width: 100,
+                    height: 20,
+                    color: color,
+                  ));
+            }).toList(),
+            onChanged: (Color? x) {
+              if (x != null) {
+                _changeColor(x);
+              }
+            }),
+            Expanded(
+              child: Container(
+                color: _selectedColor,
+                child: const Center(
+                  child: Text(
+                    '🦍 хм...',
+                    style: TextStyle(color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              )
+              )
       ],
     );
   }
